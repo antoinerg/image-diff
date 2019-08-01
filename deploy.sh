@@ -9,6 +9,7 @@ npm i
 npm run build
 git checkout gh-pages
 cp -R public/* .
+rm *.map
 git add .
 git commit -m "deploy commit $CURRENT"
 git push
