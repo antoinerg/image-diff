@@ -1,8 +1,10 @@
 <svelte:head>
-	<title>compare image</title>
+	<title>Diff images</title>
 </svelte:head>
 
 <script>
+	import Comparify from './Comparify.svelte';
+
 	import Spinner from 'svelte-spinner';
 	import Icon from 'fa-svelte'
 	import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons'
@@ -24,6 +26,8 @@
 	let loading = [];
 	let error = [];
 
+  let availableComponents = ['Diff', 'Slider']
+	let components = availableComponents;
 	let diffCanvas;
 	let numDiffPixels;
 	let percentDifference;
@@ -96,10 +100,6 @@
 input {
 	flex-grow: 1;
 }
-canvas {
-	display: block;
-	margin: 0 auto;
-}
 
 div.imgSelector {
 	display: flex;
@@ -109,6 +109,7 @@ div.imgSelector {
 	align-items: center;
 	margin-bottom: 15px;
 }
+
 div.imgSelector * {
 	margin-right: 20px;
 }
@@ -124,9 +125,13 @@ div :global(.error) {
 div :global(.icon) {
 	font-size: 1.5em;
 }
+
+.hidden {
+	display: none;
+}
 </style>
 
-<h1>Compare images</h1>
+<h1>Diff images</h1>
 {#each imagesUrl as image, i}
 <div class="imgSelector">
 	<input on:change={imgDiff} bind:value={image} />
@@ -146,13 +151,24 @@ div :global(.icon) {
 {/each}
 
 <button on:click={imgDiff}>Compare</button>
-<div>
+{#each availableComponents as component}
+	<label>
+		<input type=checkbox bind:group={components} value={component}>
+		{component}
+	</label>
+{/each}
+
+<div class:hidden="{components.indexOf('Diff') === -1}">
 	<h2>{numDiffPixels} different pixels (≈{percentDifference}%)</h2>
 	{#if msg}
 		<h3>{msg}</h3>
 	{/if}
 	<canvas bind:this={diffCanvas}/>
+</div>
 
-	<canvas bind:this={canvases[0]}/>
-	<canvas bind:this={canvases[1]}/>
+<div class:hidden="{components.indexOf('Slider') === -1}">
+<Comparify width={width[0]} value="50">
+	<canvas slot="A" bind:this={canvases[0]} />
+	<canvas slot="B" bind:this={canvases[1]} />
+</Comparify>
 </div>
