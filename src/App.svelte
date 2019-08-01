@@ -3,6 +3,8 @@
 </svelte:head>
 
 <script>
+	import {push, location, querystring} from 'svelte-spa-router'
+	import qs from 'qs'
 	import Comparify from './Comparify.svelte';
 
 	import Spinner from 'svelte-spinner';
@@ -14,6 +16,10 @@
 	import { onMount } from 'svelte';
 
 	onMount(() => {
+		var obj = qs.parse($querystring)
+		if(obj.image0) imagesUrl[0] = obj.image0
+		if(obj.image1) imagesUrl[1] = obj.image1
+		if(obj.components) components = obj.components
 		imgDiff();
 	});
 
@@ -66,6 +72,14 @@
 	}
 
 	async function imgDiff() {
+		// Push to querystring
+		var q = qs.stringify({
+			image0: imagesUrl[0],
+			image1: imagesUrl[1],
+			components: components
+		})
+		push('/?' + q)
+
 		await Promise.all([fetchImage(0), fetchImage(1)]);
 		// if(width[0] !== width[1] || height[0] !== height[1]) msg = 'Size mismatch'
 
@@ -130,7 +144,6 @@ div :global(.icon) {
 	display: none;
 }
 </style>
-
 <h1>Diff images</h1>
 {#each imagesUrl as image, i}
 <div class="imgSelector">

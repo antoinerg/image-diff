@@ -17,6 +17,7 @@
     "fa-svelte": "^3.0.0",
     "pixelmatch": "^5.0.2",
     "sirv-cli": "^0.4.4",
+    "svelte-spa-router": "^1.2.0",
     "svelte-spinner": "^2.0.1"
   },
   "scripts": {
