@@ -163,7 +163,6 @@ div :global(.icon) {
 </div>
 {/each}
 
-<button on:click={imgDiff}>Compare</button>
 {#each availableComponents as component}
 	<label>
 		<input type=checkbox bind:group={components} value={component}>
